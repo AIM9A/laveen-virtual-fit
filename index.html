@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>جرّبي العباية عليك | Laveen Abaya</title>
+  <style>
+    :root {
+      --bg: #f7f3f0;
+      --card: #ffffff;
+      --text: #1d1d1d;
+      --muted: #6f6a66;
+      --line: #e9dfd9;
+      --btn: #111111;
+      --btn-text: #ffffff;
+      --accent: #8b6f5d;
+      --warn-bg: #fff8e7;
+      --warn-line: #eed08a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 24px 16px 40px;
+    }
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .topbar {
+      text-align: center;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-size: 14px;
+      letter-spacing: .4px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.05);
+      overflow: hidden;
+    }
+    .hero {
+      padding: 28px 24px 18px;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+    }
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      padding: 22px;
+    }
+    .box {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fff;
+    }
+    .label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 8px 0 0;
+    }
+    .product-meta {
+      font-size: 15px;
+      margin: 0 0 10px;
+    }
+    .product-meta strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      background: #f4f4f4;
+      min-height: 220px;
+      object-fit: cover;
+    }
+    input[type="file"] {
+      width: 100%;
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+    .consent {
+      margin: 0 22px 22px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 16px;
+    }
+    .consent label {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .notice {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .actions {
+      padding: 0 22px 22px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    button, .link-btn {
+      border: 0;
+      background: var(--btn);
+      color: var(--btn-text);
+      padding: 13px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+    .ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    #status {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+    .result {
+      margin: 0 22px 22px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fff;
+      display: none;
+    }
+    .result.show { display: block; }
+    .footer-note {
+      text-align: center;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 27px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">Laveen Abaya • تجربة افتراضية مبسطة</div>
+
+    <div class="card">
+      <div class="hero">
+        <h1>جرّبي العباية عليك</h1>
+        <p class="sub">ارفعي صورتك وشاهدي معاينة تقريبية للشكل العام قبل الشراء.</p>
+      </div>
+
+      <div class="grid">
+        <div class="box">
+          <span class="label">المنتج</span>
+          <p class="product-meta">
+            <strong id="productTitle">عباية من لاڤين</strong>
+            <span id="productUrlText">سيتم عرض رابط المنتج بعد التحميل</span>
+          </p>
+          <img id="garmentPreview" alt="صورة العباية" />
+          <p class="muted">هذه الصورة تُجلب مباشرة من صفحة المنتج في متجرك.</p>
+        </div>
+
+        <div class="box">
+          <span class="label">صورتك</span>
+          <input id="personImage" type="file" accept="image/*" />
+          <p class="muted">الأفضل: صورة أمامية كاملة، إضاءة جيدة، وخلفية واضحة.</p>
+          <img id="personPreview" alt="معاينة صورتك" style="display:none;margin-top:12px;" />
+        </div>
+      </div>
+
+      <div class="consent">
+        <label>
+          <input type="checkbox" id="consent" />
+          <span>أوافق على استخدام الصورة فقط لإنشاء هذه المعاينة.</span>
+        </label>
+        <div class="notice">
+          المعاينة تقريبية للشكل العام، وليست تمثيلًا دقيقًا للمقاس أو خامة القماش أو درجة الاتساع النهائية.
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="runBtn">إنشاء المعاينة</button>
+        <a id="backToStore" class="link-btn ghost" href="#" target="_blank" rel="noopener">الرجوع للمنتج</a>
+        <p id="status"></p>
+      </div>
+
+      <div id="resultBox" class="result">
+        <span class="label">النتيجة</span>
+        <img id="resultImage" alt="نتيجة المعاينة" />
+        <div class="actions" style="padding:12px 0 0;margin:0;">
+          <a id="buyLink" class="link-btn" href="#" target="_blank" rel="noopener">إكمال الشراء</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">صُمم هذا النموذج خصيصًا لمتجر laveenabaya.com</div>
+  </div>
+
+  <script>
+    const qs = new URLSearchParams(window.location.search);
+    const garmentImage = qs.get('image') || '';
+    const productUrl = qs.get('product_url') || 'https://laveenabaya.com';
+    const title = qs.get('title') || 'عباية من لاڤين';
+
+    const garmentPreview = document.getElementById('garmentPreview');
+    const productTitle = document.getElementById('productTitle');
+    const productUrlText = document.getElementById('productUrlText');
+    const backToStore = document.getElementById('backToStore');
+    const buyLink = document.getElementById('buyLink');
+    const personImage = document.getElementById('personImage');
+    const personPreview = document.getElementById('personPreview');
+    const runBtn = document.getElementById('runBtn');
+    const statusEl = document.getElementById('status');
+    const resultBox = document.getElementById('resultBox');
+    const resultImage = document.getElementById('resultImage');
+
+    productTitle.textContent = title;
+    productUrlText.textContent = productUrl;
+    backToStore.href = productUrl;
+    buyLink.href = productUrl;
+    garmentPreview.src = garmentImage || 'https://dummyimage.com/800x1100/f0f0f0/777&text=No+Image';
+
+    personImage.addEventListener('change', () => {
+      const file = personImage.files?.[0];
+      if (!file) return;
+      personPreview.src = URL.createObjectURL(file);
+      personPreview.style.display = 'block';
+    });
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    runBtn.addEventListener('click', async () => {
+      const file = personImage.files?.[0];
+      const consent = document.getElementById('consent').checked;
+
+      if (!garmentImage) {
+        alert('لم تصل صورة المنتج إلى الصفحة.');
+        return;
+      }
+      if (!file) {
+        alert('ارفعي صورتك أولًا.');
+        return;
+      }
+      if (!consent) {
+        alert('يجب الموافقة على استخدام الصورة.');
+        return;
+      }
+
+      runBtn.disabled = true;
+      resultBox.classList.remove('show');
+      statusEl.textContent = 'جاري إنشاء المعاينة...';
+
+      try {
+        const modelBase64 = await fileToBase64(file);
+
+        const res = await fetch('/api/tryon', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model_image: modelBase64,
+            garment_image: garmentImage,
+            product_title: title,
+            product_url: productUrl
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'فشل إنشاء المعاينة');
+        }
+
+        resultImage.src = data.result;
+        resultBox.classList.add('show');
+        statusEl.textContent = 'تم إنشاء المعاينة بنجاح.';
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'حدث خطأ: ' + err.message;
+      } finally {
+        runBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

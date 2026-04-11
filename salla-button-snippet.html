@@ -1,0 +1,68 @@
+<!-- Laveen Abaya - زر التجربة الافتراضية -->
+<a id="laveen-virtual-fit-btn"
+   href="#"
+   target="_blank"
+   rel="noopener"
+   style="display:inline-block;background:#111;color:#fff;padding:12px 18px;border-radius:10px;text-decoration:none;margin-top:12px;">
+  جرّبي العباية عليك
+</a>
+
+<script>
+(function() {
+  function getProductTitle() {
+    const selectors = [
+      'h1',
+      '.product-title',
+      '.product-entry__title',
+      '[data-product-name]'
+    ];
+
+    for (const selector of selectors) {
+      const el = document.querySelector(selector);
+      if (el && el.textContent.trim()) return el.textContent.trim();
+    }
+
+    return document.title.replace(/\s*\|.*$/, '').trim() || 'عباية من لاڤين';
+  }
+
+  function getProductImage() {
+    const candidates = [
+      '.product-entry img',
+      '.product-gallery img',
+      '.swiper-slide-active img',
+      '.swiper-slide img',
+      'img[data-src]',
+      'main img'
+    ];
+
+    for (const selector of candidates) {
+      const img = document.querySelector(selector);
+      if (!img) continue;
+      const src = img.getAttribute('src') || img.getAttribute('data-src');
+      if (src && /^https?:\/\//i.test(src)) return src;
+    }
+
+    return '';
+  }
+
+  function boot() {
+    const btn = document.getElementById('laveen-virtual-fit-btn');
+    if (!btn) return;
+
+    const productUrl = window.location.href;
+    const title = getProductTitle();
+    const image = getProductImage();
+
+    const params = new URLSearchParams({
+      title,
+      product_url: productUrl,
+      image
+    });
+
+    btn.href = 'https://YOUR-VERCEL-DOMAIN.vercel.app/?' + params.toString();
+  }
+
+  document.addEventListener('DOMContentLoaded', boot);
+  setTimeout(boot, 1500);
+})();
+</script>
