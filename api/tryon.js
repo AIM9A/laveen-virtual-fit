@@ -10,11 +10,11 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing model_image or garment_image' });
     }
 
-    const response = await fetch('https://api.fashn.ai/v1/run', {
+    const apiRes = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.FASHN_API_KEY}`,
+        'Authorization': `Bearer ${process.env.FASHN_API_KEY}`
       },
       body: JSON.stringify({
         model_name: 'tryon-v1.6',
@@ -27,10 +27,10 @@ export default async function handler(req, res) {
       })
     });
 
-    const data = await response.json();
+    const data = await apiRes.json();
 
-    if (!response.ok) {
-      return res.status(response.status).json({
+    if (!apiRes.ok) {
+      return res.status(apiRes.status).json({
         error: data?.message || data?.error || 'FASHN API error',
         raw: data
       });
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ result });
   } catch (error) {
     return res.status(500).json({
-      error: error?.message || 'Internal server error'
+      error: error.message || 'Server error'
     });
   }
 }
