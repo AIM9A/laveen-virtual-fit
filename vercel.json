@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/tryon.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
-}
