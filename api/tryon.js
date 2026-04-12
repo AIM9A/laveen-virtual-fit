@@ -31,16 +31,18 @@ export default async function handler(req, res) {
 
     // 1) Start prediction
     const runResponse = await fetch(`${BASE_URL}/run`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        model_name: 'tryon-max',
-        inputs: {
-          model_image,
-          garment_image
-        }
-      })
-    });
+  method: 'POST',
+  headers,
+  body: JSON.stringify({
+    model_name: 'tryon-max',
+    inputs: {
+      product_image: garment_image,
+      model_image: model_image,
+      output_format: 'png',
+      return_base64: true
+    }
+  })
+});
 
     const runData = await runResponse.json();
 
