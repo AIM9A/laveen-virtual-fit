@@ -1,353 +1,120 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>جرّبي العباية عليك</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f4f1;
-      margin: 0;
-      padding: 20px;
-      color: #222;
-    }
+const BASE_URL = 'https://api.fashn.ai/v1';
 
-    .wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.06);
-      border: 1px solid #eee3da;
-    }
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-    h1 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      font-size: 30px;
-    }
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-    p {
-      line-height: 1.8;
-    }
+  try {
+    const { model_image, product_image } = req.body || {};
 
-    .muted {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .box {
-      margin: 16px 0;
-      padding: 18px;
-      border: 1px solid #eadfd6;
-      border-radius: 18px;
-      background: #fff;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    input[type="file"] {
-      display: block;
-      width: 100%;
-      margin-bottom: 12px;
-    }
-
-    button, .buy-link, .secondary-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 0;
-      padding: 14px 20px;
-      border-radius: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 16px;
-      min-height: 52px;
-      box-sizing: border-box;
-    }
-
-    button {
-      background: #000;
-      color: #fff;
-    }
-
-    .secondary-btn {
-      background: #fff;
-      color: #222;
-      border: 1px solid #ddd;
-    }
-
-    .buy-link {
-      background: #000;
-      color: #fff;
-    }
-
-    button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    img {
-      max-width: 100%;
-      border-radius: 18px;
-      display: block;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .note {
-      background: #fbf6ea;
-      border: 1px solid #e6c76a;
-      padding: 16px;
-      border-radius: 16px;
-      margin-top: 12px;
-      font-size: 15px;
-      line-height: 1.8;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    #garmentPreview {
-      width: 100%;
-      background: #fafafa;
-    }
-
-    #gallery {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    #gallery img {
-      width: 72px;
-      height: 72px;
-      object-fit: cover;
-      border-radius: 12px;
-      cursor: pointer;
-      border: 1px solid #ddd;
-      background: #fff;
-    }
-
-    #status {
-      margin-top: 12px;
-      font-size: 15px;
-    }
-
-    #resultImage {
-      width: 100%;
-      margin-top: 12px;
-    }
-
-    @media (max-width: 700px) {
-      .row {
-        grid-template-columns: 1fr;
-      }
-
-      .wrap {
-        padding: 16px;
-        border-radius: 18px;
-      }
-
-      .actions {
-        flex-direction: row;
-      }
-
-      button, .buy-link, .secondary-btn {
-        width: calc(50% - 6px);
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>جرّبي العباية عليك</h1>
-    <p class="muted" id="product-title">جاري تحميل بيانات المنتج...</p>
-
-    <div class="row">
-      <div class="box">
-        <label>اختاري صورة العباية المناسبة للمعاينة</label>
-        <img id="garmentPreview" alt="صورة العباية" />
-        <div id="gallery"></div>
-      </div>
-
-      <div class="box">
-        <label for="personImage">ارفعي صورتك</label>
-        <input id="personImage" type="file" accept="image/*" />
-        <p class="muted">
-          الأفضل: صورة أمامية كاملة، إضاءة جيدة، وخلفية واضحة.
-        </p>
-      </div>
-    </div>
-
-    <div class="box">
-      <label>
-        <input type="checkbox" id="consent" />
-        أوافق على استخدام الصورة فقط لإنشاء هذه المعاينة.
-      </label>
-
-      <div class="note">
-        المعاينة تقريبية للشكل العام، وليست تمثيلًا دقيقًا للمقاس أو خامة القماش أو درجة الاتساع النهائية.
-      </div>
-    </div>
-
-    <div class="actions">
-      <a id="buyLink" class="secondary-btn" href="#" target="_blank" rel="noopener">الرجوع للمنتج</a>
-      <button id="runBtn">إنشاء المعاينة</button>
-    </div>
-
-    <p id="status" class="muted"></p>
-
-    <div id="resultBox" class="box hidden">
-      <label>النتيجة</label>
-      <img id="resultImage" alt="نتيجة التجربة" />
-      <div class="actions">
-        <a id="buyLinkBottom" class="buy-link" href="#" target="_blank" rel="noopener">إكمال الشراء</a>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const initialImage = params.get('image') || '';
-    const productUrl = params.get('product_url') || '#';
-    const title = params.get('title') || 'عباية';
-
-    let galleryImages = [];
-    try {
-      galleryImages = JSON.parse(params.get('images') || '[]');
-    } catch (e) {
-      galleryImages = [];
-    }
-
-    if (!galleryImages.length && initialImage) {
-      galleryImages = [initialImage];
-    }
-
-    let selectedGarmentImage = initialImage || galleryImages[0] || '';
-
-    const garmentPreview = document.getElementById('garmentPreview');
-    const productTitle = document.getElementById('product-title');
-    const buyLink = document.getElementById('buyLink');
-    const buyLinkBottom = document.getElementById('buyLinkBottom');
-    const runBtn = document.getElementById('runBtn');
-    const statusEl = document.getElementById('status');
-    const resultBox = document.getElementById('resultBox');
-    const resultImage = document.getElementById('resultImage');
-    const gallery = document.getElementById('gallery');
-
-    productTitle.textContent = title;
-    buyLink.href = productUrl;
-    buyLinkBottom.href = productUrl;
-
-    if (selectedGarmentImage) {
-      garmentPreview.src = selectedGarmentImage;
-    }
-
-    function renderGallery(images) {
-      gallery.innerHTML = '';
-
-      images.forEach((src) => {
-        const thumb = document.createElement('img');
-        thumb.src = src;
-        thumb.alt = 'صورة منتج';
-
-        if (src === selectedGarmentImage) {
-          thumb.style.border = '2px solid #111';
-        }
-
-        thumb.addEventListener('click', () => {
-          selectedGarmentImage = src;
-          garmentPreview.src = src;
-          renderGallery(images);
-        });
-
-        gallery.appendChild(thumb);
+    if (!process.env.FASHN_API_KEY) {
+      return res.status(500).json({
+        error: 'FASHN_API_KEY is missing in Vercel environment variables'
       });
     }
 
-    renderGallery(galleryImages);
-
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+    if (!model_image || !product_image) {
+      return res.status(400).json({
+        error: 'Missing model_image or product_image'
       });
     }
 
-    runBtn.addEventListener('click', async () => {
-      const file = document.getElementById('personImage').files[0];
-      const consent = document.getElementById('consent').checked;
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.FASHN_API_KEY}`,
+    };
 
-      if (!selectedGarmentImage) {
-        alert('اختاري صورة المنتج أولًا');
-        return;
-      }
-
-      if (!file) {
-        alert('ارفعي صورتك أولًا');
-        return;
-      }
-
-      if (!consent) {
-        alert('يجب الموافقة على استخدام الصورة');
-        return;
-      }
-
-      runBtn.disabled = true;
-      statusEl.textContent = 'جاري إنشاء المعاينة... قد يستغرق هذا بين 20 و 120 ثانية';
-
-      try {
-        const personBase64 = await fileToBase64(file);
-
-        const res = await fetch('/api/tryon', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model_image: personBase64,
-            garment_image: selectedGarmentImage
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || 'فشل إنشاء المعاينة');
+    const runResponse = await fetch(`${BASE_URL}/run`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model_name: 'tryon-max',
+        inputs: {
+          product_image: product_image,
+          model_image: model_image
         }
-
-        resultImage.src = data.result;
-        resultBox.classList.remove('hidden');
-        statusEl.textContent = 'تم إنشاء المعاينة بنجاح';
-      } catch (err) {
-        console.error(err);
-        statusEl.textContent = 'حدث خطأ: ' + err.message;
-      } finally {
-        runBtn.disabled = false;
-      }
+      })
     });
-  </script>
-</body>
-</html>
+
+    const runData = await runResponse.json();
+
+    if (!runResponse.ok) {
+      return res.status(runResponse.status).json({
+        error: runData?.message || runData?.error || 'FASHN run error',
+        raw: runData
+      });
+    }
+
+    const predictionId = runData?.id;
+    if (!predictionId) {
+      return res.status(500).json({
+        error: 'FASHN did not return a prediction id',
+        raw: runData
+      });
+    }
+
+    const maxAttempts = 50;
+    const delayMs = 2000;
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      await sleep(delayMs);
+
+      const statusResponse = await fetch(`${BASE_URL}/status/${predictionId}`, {
+        method: 'GET',
+        headers
+      });
+
+      const statusData = await statusResponse.json();
+
+      if (!statusResponse.ok) {
+        return res.status(statusResponse.status).json({
+          error: statusData?.message || statusData?.error || 'FASHN status error',
+          raw: statusData
+        });
+      }
+
+      const status = statusData?.status;
+
+      if (status === 'completed') {
+        const output = statusData?.output;
+
+        const result =
+          output?.[0] ||
+          output?.image ||
+          output?.images?.[0] ||
+          statusData?.image ||
+          null;
+
+        if (!result) {
+          return res.status(500).json({
+            error: 'Prediction completed but no result image was returned',
+            raw: statusData
+          });
+        }
+
+        return res.status(200).json({ result });
+      }
+
+      if (status === 'failed' || status === 'cancelled') {
+        return res.status(500).json({
+          error: `Prediction ${status}`,
+          raw: statusData
+        });
+      }
+    }
+
+    return res.status(504).json({
+      error: 'Timed out while waiting for FASHN result'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      error: error?.message || 'Internal server error'
+    });
+  }
+}
