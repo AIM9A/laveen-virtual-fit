@@ -13,11 +13,15 @@ export default async function handler(req, res) {
     const { model_image, garment_image } = req.body || {};
 
     if (!process.env.FASHN_API_KEY) {
-      return res.status(500).json({ error: 'FASHN_API_KEY is missing in Vercel environment variables' });
+      return res.status(500).json({
+        error: 'FASHN_API_KEY is missing in Vercel environment variables'
+      });
     }
 
     if (!model_image || !garment_image) {
-      return res.status(400).json({ error: 'Missing model_image or garment_image' });
+      return res.status(400).json({
+        error: 'Missing model_image or garment_image'
+      });
     }
 
     const headers = {
@@ -25,12 +29,12 @@ export default async function handler(req, res) {
       'Authorization': `Bearer ${process.env.FASHN_API_KEY}`,
     };
 
-    // 1) إنشاء المهمة
+    // 1) Start prediction
     const runResponse = await fetch(`${BASE_URL}/run`, {
       method: 'POST',
       headers,
       body: JSON.stringify({
-        model_name: 'tryon-v1.6',
+        model_name: 'tryon-max',
         inputs: {
           model_image,
           garment_image
@@ -55,8 +59,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // 2) Polling على الحالة
-    const maxAttempts = 40; // تقريبًا حتى 80 ثانية
+    // 2) Poll status
+    const maxAttempts = 50; // up to ~100 seconds
     const delayMs = 2000;
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
