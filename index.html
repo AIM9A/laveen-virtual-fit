@@ -352,8 +352,6 @@
 </body>
 </html> -->
 
-
-
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -439,16 +437,28 @@
     }
 
     .brand-mark {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: grid;
       place-items: center;
       border: 1px solid var(--border);
-      background: radial-gradient(circle at center, rgba(216,178,106,.2), rgba(216,178,106,.02));
-      color: var(--gold);
-      font-size: 13px;
-      letter-spacing: 2px;
+      background: radial-gradient(circle at center, rgba(216,178,106,.12), rgba(216,178,106,.02));
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo-wrap {
+      background: transparent !important;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .brand-text strong {
@@ -660,6 +670,12 @@
       padding: 14px 16px;
       font-weight: 600;
       cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .file-btn.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(216,178,106,.08);
     }
 
     .hint-list {
@@ -737,6 +753,11 @@
     .btn-primary:hover {
       transform: translateY(-1px);
       box-shadow: 0 14px 30px rgba(0,0,0,.32);
+    }
+
+    .btn-primary:disabled {
+      opacity: .7;
+      cursor: not-allowed;
     }
 
     .btn-secondary {
@@ -890,7 +911,9 @@
     <div class="shell">
       <div class="topbar">
         <div class="brand">
-          <div class="brand-mark">LV</div>
+          <div class="brand-mark logo-wrap">
+            <img id="brandLogo" src="https://cdn.salla.sa/form-builder/KYNGJqQ0I7j9JXk8Q8Z4dVIBQn9UuXqvNQ6lq6wV.png" alt="Laveen Logo">
+          </div>
           <div class="brand-text">
             <strong>Laveen Abaya</strong>
             <span>AI Preview Experience</span>
@@ -931,8 +954,38 @@
             <p>ارفعي صورة أمامية كاملة بإضاءة جيدة ووضعية مستقيمة وخلفية واضحة للحصول على معاينة أدق.</p>
 
             <div class="file-wrap">
-              <div class="file-btn">اختاري الصورة من جهازك</div>
+              <div id="fileBtnText" class="file-btn">اختاري الصورة من جهازك</div>
               <input id="personImage" type="file" accept="image/*">
+            </div>
+
+            <div id="selectedFileBox" class="hidden" style="margin-top:12px;">
+              <div style="
+                display:flex;
+                align-items:center;
+                gap:10px;
+                padding:10px 12px;
+                border:1px solid var(--border);
+                border-radius:14px;
+                background:rgba(216,178,106,.05);
+              ">
+                <img id="personPreviewThumb" src="" alt="معاينة الصورة" style="
+                  width:48px;
+                  height:48px;
+                  object-fit:cover;
+                  border-radius:12px;
+                  border:1px solid rgba(255,255,255,.08);
+                ">
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:12px; color:var(--muted);">تم اختيار الصورة</div>
+                  <div id="selectedFileName" style="
+                    font-size:13px;
+                    color:var(--text);
+                    white-space:nowrap;
+                    overflow:hidden;
+                    text-overflow:ellipsis;
+                  "></div>
+                </div>
+              </div>
             </div>
 
             <div class="hint-list">
@@ -1019,6 +1072,12 @@
     const gallery = document.getElementById('gallery');
     const loadingEl = document.getElementById('loading');
 
+    const personImageInput = document.getElementById('personImage');
+    const selectedFileBox = document.getElementById('selectedFileBox');
+    const selectedFileName = document.getElementById('selectedFileName');
+    const personPreviewThumb = document.getElementById('personPreviewThumb');
+    const fileBtnText = document.getElementById('fileBtnText');
+
     productTitle.textContent = title;
     buyLink.href = productUrl;
     buyLinkBottom.href = productUrl;
@@ -1051,6 +1110,30 @@
 
     renderGallery(galleryImages);
 
+    personImageInput.addEventListener('change', () => {
+      const file = personImageInput.files && personImageInput.files[0];
+
+      if (!file) {
+        selectedFileBox.classList.add('hidden');
+        selectedFileName.textContent = '';
+        personPreviewThumb.src = '';
+        fileBtnText.textContent = 'اختاري الصورة من جهازك';
+        fileBtnText.classList.remove('active');
+        return;
+      }
+
+      selectedFileName.textContent = file.name;
+      fileBtnText.textContent = 'تم اختيار الصورة';
+      fileBtnText.classList.add('active');
+      selectedFileBox.classList.remove('hidden');
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        personPreviewThumb.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
     function fileToBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -1061,7 +1144,7 @@
     }
 
     runBtn.addEventListener('click', async () => {
-      const file = document.getElementById('personImage').files[0];
+      const file = personImageInput.files[0];
       const consent = document.getElementById('consent').checked;
 
       if (!selectedGarmentImage) {
