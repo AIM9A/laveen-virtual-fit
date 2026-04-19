@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -346,6 +346,773 @@
         statusEl.textContent = 'حدث خطأ: ' + err.message;
       } finally {
         runBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html> -->
+
+
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>جربي العباية عليك | Laveen</title>
+  <style>
+    :root {
+      --bg: #0d0d0f;
+      --bg-soft: #141417;
+      --card: rgba(255,255,255,0.04);
+      --card-2: rgba(255,255,255,0.06);
+      --border: rgba(216,178,106,0.18);
+      --border-soft: rgba(255,255,255,0.08);
+      --text: #f5efe6;
+      --muted: #bcae98;
+      --gold: #d8b26a;
+      --gold-soft: #9e7d45;
+      --success: #d8b26a;
+      --danger: #ffb4b4;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 24px;
+      --radius-sm: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(216,178,106,.08), transparent 20%),
+        linear-gradient(180deg, #0b0b0d 0%, #111114 100%);
+      color: var(--text);
+      min-height: 100%;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: .12;
+      pointer-events: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .shell {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-soft);
+      background: rgba(255,255,255,.02);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at center, rgba(216,178,106,.2), rgba(216,178,106,.02));
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 2px;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      color: var(--gold);
+      background: rgba(216,178,106,.06);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .hero {
+      padding: 34px 24px 10px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.1;
+      letter-spacing: -.02em;
+    }
+
+    .hero p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.9;
+      max-width: 720px;
+    }
+
+    .product-title {
+      margin-top: 14px;
+      color: var(--gold);
+      font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
+      padding: 22px 24px 28px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.02));
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.03) 40%, transparent 80%);
+      transform: translateX(-120%);
+      pointer-events: none;
+    }
+
+    .card:hover::after {
+      transform: translateX(120%);
+      transition: 1.2s ease;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-title strong {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .preview-frame {
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at top, rgba(216,178,106,.08), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border-radius: 22px;
+      padding: 14px;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-frame img {
+      width: 100%;
+      max-height: 560px;
+      object-fit: contain;
+      border-radius: 18px;
+      display: block;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .gallery img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: #18181b;
+      cursor: pointer;
+      transition: .22s ease;
+    }
+
+    .gallery img:hover {
+      transform: translateY(-2px);
+      border-color: rgba(216,178,106,.4);
+    }
+
+    .gallery img.active {
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 0 4px rgba(216,178,106,.12);
+    }
+
+    .upload-zone {
+      border: 1px dashed rgba(216,178,106,.35);
+      border-radius: 22px;
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(216,178,106,.04), rgba(255,255,255,.015));
+      text-align: center;
+    }
+
+    .upload-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      background: rgba(216,178,106,.06);
+      font-size: 24px;
+    }
+
+    .upload-zone h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .upload-zone p {
+      margin: 10px auto 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+      max-width: 380px;
+    }
+
+    .file-wrap {
+      margin-top: 18px;
+      position: relative;
+    }
+
+    .file-wrap input[type="file"] {
+      width: 100%;
+      opacity: 0;
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+    }
+
+    .file-btn {
+      width: 100%;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      background: #17171a;
+      color: var(--text);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .hint-list {
+      margin-top: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hint {
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.025);
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .consent-card {
+      margin-top: 20px;
+      border: 1px solid var(--border);
+      background: rgba(216,178,106,.05);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .consent-row input {
+      margin-top: 3px;
+      accent-color: var(--gold);
+    }
+
+    .consent-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .btn {
+      min-height: 52px;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: .2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: linear-gradient(180deg, #171717, #000);
+      color: #fff;
+      border: 1px solid #262626;
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(0,0,0,.32);
+    }
+
+    .btn-secondary {
+      min-width: 180px;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,.04);
+    }
+
+    .status {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+      min-height: 24px;
+    }
+
+    .loading {
+      margin-top: 14px;
+      display: none;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .loading-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.05);
+    }
+
+    .loading-bar span {
+      display: block;
+      height: 100%;
+      width: 35%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(216,178,106,.2), var(--gold), rgba(216,178,106,.2));
+      animation: loadingMove 1.4s linear infinite;
+    }
+
+    @keyframes loadingMove {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(320%); }
+    }
+
+    .result-card {
+      margin: 0 24px 28px;
+      display: none;
+    }
+
+    .result-card.show {
+      display: block;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      gap: 10px;
+    }
+
+    .result-header strong {
+      font-size: 18px;
+    }
+
+    .result-image-wrap {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top, rgba(216,178,106,.08), transparent 22%),
+        #121215;
+      padding: 14px;
+    }
+
+    #resultImage {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+    }
+
+    .bottom-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 12px;
+      }
+
+      .topbar,
+      .hero,
+      .layout,
+      .result-card {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .hero {
+        padding-top: 22px;
+      }
+
+      .topbar {
+        gap: 12px;
+      }
+
+      .badge {
+        display: none;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn,
+      .btn-secondary,
+      .btn-primary {
+        width: 100%;
+      }
+
+      .preview-frame {
+        min-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark">LV</div>
+          <div class="brand-text">
+            <strong>Laveen Abaya</strong>
+            <span>AI Preview Experience</span>
+          </div>
+        </div>
+        <div class="badge">Powered by AI</div>
+      </div>
+
+      <div class="hero">
+        <h1>جربي العباية عليك</h1>
+        <p>معاينة ذكية بتصميم تقني فاخر تساعدك على تصوّر الإطلالة قبل الشراء، مع تجربة أنيقة تليق بهوية لافين.</p>
+        <div id="product-title" class="product-title">جاري تحميل بيانات المنتج...</div>
+      </div>
+
+      <div class="layout">
+        <div class="card">
+          <div class="section-title">
+            <strong>اختاري صورة العباية</strong>
+            <span>AI Preview</span>
+          </div>
+
+          <div class="preview-frame">
+            <img id="garmentPreview" alt="صورة العباية">
+          </div>
+
+          <div id="gallery" class="gallery"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">
+            <strong>ارفعي صورتك</strong>
+            <span>Smart Upload</span>
+          </div>
+
+          <div class="upload-zone">
+            <div class="upload-icon">↑</div>
+            <h3>صورة واضحة تعطي نتيجة أفضل</h3>
+            <p>ارفعي صورة أمامية كاملة بإضاءة جيدة ووضعية مستقيمة وخلفية واضحة للحصول على معاينة أدق.</p>
+
+            <div class="file-wrap">
+              <div class="file-btn">اختاري الصورة من جهازك</div>
+              <input id="personImage" type="file" accept="image/*">
+            </div>
+
+            <div class="hint-list">
+              <div class="hint">صورة أمامية كاملة</div>
+              <div class="hint">إضاءة واضحة</div>
+              <div class="hint">خلفية نظيفة قدر الإمكان</div>
+            </div>
+          </div>
+
+          <div class="consent-card">
+            <div class="consent-row">
+              <input type="checkbox" id="consent">
+              <p>
+                أوافق على استخدام الصورة لإنشاء هذه المعاينة فقط.
+                هذه المعاينة تقريبية للشكل العام وليست تمثيلًا دقيقًا للمقاس أو خامة القماش.
+              </p>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="runBtn" class="btn btn-primary">إنشاء المعاينة</button>
+            <a id="buyLink" class="btn btn-secondary" href="#" target="_blank" rel="noopener">الرجوع للمنتج</a>
+          </div>
+
+          <div id="status" class="status"></div>
+
+          <div id="loading" class="loading">
+            <div class="loading-bar"><span></span></div>
+            <div class="status">جارٍ إنشاء المعاينة... قد يستغرق هذا من 20 إلى 120 ثانية</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultBox" class="result-card">
+        <div class="card">
+          <div class="result-header">
+            <strong>النتيجة</strong>
+            <span class="badge">Preview Ready</span>
+          </div>
+
+          <div class="result-image-wrap">
+            <img id="resultImage" alt="نتيجة المعاينة">
+          </div>
+
+          <div class="actions">
+            <a id="buyLinkBottom" class="btn btn-primary" href="#" target="_blank" rel="noopener">إكمال الشراء</a>
+          </div>
+
+          <div class="bottom-note">
+            هذه المعاينة تقريبية للشكل العام، وقد تختلف النتيجة النهائية بحسب القصة والخامة ووضعية الصورة والإضاءة.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const initialImage = params.get('image') || '';
+    const productUrl = params.get('product_url') || '#';
+    const title = params.get('title') || 'عباية';
+
+    let galleryImages = [];
+    try {
+      galleryImages = JSON.parse(params.get('images') || '[]');
+    } catch (e) {
+      galleryImages = [];
+    }
+
+    if (!galleryImages.length && initialImage) {
+      galleryImages = [initialImage];
+    }
+
+    let selectedGarmentImage = initialImage || galleryImages[0] || '';
+
+    const garmentPreview = document.getElementById('garmentPreview');
+    const productTitle = document.getElementById('product-title');
+    const buyLink = document.getElementById('buyLink');
+    const buyLinkBottom = document.getElementById('buyLinkBottom');
+    const runBtn = document.getElementById('runBtn');
+    const statusEl = document.getElementById('status');
+    const resultBox = document.getElementById('resultBox');
+    const resultImage = document.getElementById('resultImage');
+    const gallery = document.getElementById('gallery');
+    const loadingEl = document.getElementById('loading');
+
+    productTitle.textContent = title;
+    buyLink.href = productUrl;
+    buyLinkBottom.href = productUrl;
+
+    if (selectedGarmentImage) {
+      garmentPreview.src = selectedGarmentImage;
+    }
+
+    function renderGallery(images) {
+      gallery.innerHTML = '';
+
+      images.forEach((src) => {
+        const thumb = document.createElement('img');
+        thumb.src = src;
+        thumb.alt = 'صورة منتج';
+
+        if (src === selectedGarmentImage) {
+          thumb.classList.add('active');
+        }
+
+        thumb.addEventListener('click', () => {
+          selectedGarmentImage = src;
+          garmentPreview.src = src;
+          renderGallery(images);
+        });
+
+        gallery.appendChild(thumb);
+      });
+    }
+
+    renderGallery(galleryImages);
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    runBtn.addEventListener('click', async () => {
+      const file = document.getElementById('personImage').files[0];
+      const consent = document.getElementById('consent').checked;
+
+      if (!selectedGarmentImage) {
+        alert('اختاري صورة المنتج أولًا');
+        return;
+      }
+
+      if (!file) {
+        alert('ارفعي صورتك أولًا');
+        return;
+      }
+
+      if (!consent) {
+        alert('يجب الموافقة على استخدام الصورة');
+        return;
+      }
+
+      runBtn.disabled = true;
+      statusEl.textContent = '';
+      loadingEl.classList.add('active');
+
+      try {
+        const personBase64 = await fileToBase64(file);
+
+        const res = await fetch('/api/tryon', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model_image: personBase64,
+            garment_image: selectedGarmentImage
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'فشل إنشاء المعاينة');
+        }
+
+        resultImage.src = data.result;
+        resultBox.classList.add('show');
+        statusEl.textContent = 'تم إنشاء المعاينة بنجاح';
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'حدث خطأ: ' + err.message;
+      } finally {
+        runBtn.disabled = false;
+        loadingEl.classList.remove('active');
       }
     });
   </script>
