@@ -1,357 +1,3 @@
-<!-- <!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>جرّبي العباية عليك</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f4f1;
-      margin: 0;
-      padding: 20px;
-      color: #222;
-    }
-
-    .wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.06);
-      border: 1px solid #eee3da;
-    }
-
-    h1 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      font-size: 30px;
-    }
-
-    p {
-      line-height: 1.8;
-    }
-
-    .muted {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .box {
-      margin: 16px 0;
-      padding: 18px;
-      border: 1px solid #eadfd6;
-      border-radius: 18px;
-      background: #fff;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    input[type="file"] {
-      display: block;
-      width: 100%;
-      margin-bottom: 12px;
-    }
-
-    button, .buy-link, .secondary-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 0;
-      padding: 14px 20px;
-      border-radius: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 16px;
-      min-height: 52px;
-      box-sizing: border-box;
-    }
-
-    button {
-      background: #000;
-      color: #fff;
-    }
-
-    .secondary-btn {
-      background: #fff;
-      color: #222;
-      border: 1px solid #ddd;
-    }
-
-    .buy-link {
-      background: #000;
-      color: #fff;
-    }
-
-    button:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    img {
-      max-width: 100%;
-      border-radius: 18px;
-      display: block;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .note {
-      background: #fbf6ea;
-      border: 1px solid #e6c76a;
-      padding: 16px;
-      border-radius: 16px;
-      margin-top: 12px;
-      font-size: 15px;
-      line-height: 1.8;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    #garmentPreview {
-      width: 100%;
-      background: #fafafa;
-    }
-
-    #gallery {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    #gallery img {
-      width: 72px;
-      height: 72px;
-      object-fit: cover;
-      border-radius: 12px;
-      cursor: pointer;
-      border: 1px solid #ddd;
-      background: #fff;
-    }
-
-    #status {
-      margin-top: 12px;
-      font-size: 15px;
-    }
-
-    #resultImage {
-      width: 100%;
-      margin-top: 12px;
-    }
-
-    @media (max-width: 700px) {
-      .row {
-        grid-template-columns: 1fr;
-      }
-
-      .wrap {
-        padding: 16px;
-        border-radius: 18px;
-      }
-
-      .actions {
-        flex-direction: row;
-      }
-
-      button, .buy-link, .secondary-btn {
-        width: calc(50% - 6px);
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>جرّبي العباية عليك</h1>
-    <p class="muted" id="product-title">جاري تحميل بيانات المنتج...</p>
-
-    <div class="row">
-      <div class="box">
-        <label>اختاري صورة العباية المناسبة للمعاينة</label>
-        <img id="garmentPreview" alt="صورة العباية" />
-        <div id="gallery"></div>
-      </div>
-
-      <div class="box">
-        <label for="personImage">ارفعي صورتك</label>
-        <input id="personImage" type="file" accept="image/*" />
-        <p class="muted">
-          الأفضل: صورة أمامية كاملة، إضاءة جيدة، وخلفية واضحة.
-        </p>
-      </div>
-    </div>
-
-    <div class="box">
-      <label>
-        <input type="checkbox" id="consent" />
-        أوافق على استخدام الصورة فقط لإنشاء هذه المعاينة.
-      </label>
-
-      <div class="note">
-        المعاينة تقريبية للشكل العام، وليست تمثيلًا دقيقًا للمقاس أو خامة القماش أو درجة الاتساع النهائية.
-      </div>
-    </div>
-
-    <div class="actions">
-      <a id="buyLink" class="secondary-btn" href="#" target="_blank" rel="noopener">الرجوع للمنتج</a>
-      <button id="runBtn">إنشاء المعاينة</button>
-    </div>
-
-    <p id="status" class="muted"></p>
-
-    <div id="resultBox" class="box hidden">
-      <label>النتيجة</label>
-      <img id="resultImage" alt="نتيجة التجربة" />
-      <div class="actions">
-        <a id="buyLinkBottom" class="buy-link" href="#" target="_blank" rel="noopener">إكمال الشراء</a>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const initialImage = params.get('image') || '';
-    const productUrl = params.get('product_url') || '#';
-    const title = params.get('title') || 'عباية';
-
-    let galleryImages = [];
-    try {
-      galleryImages = JSON.parse(params.get('images') || '[]');
-    } catch (e) {
-      galleryImages = [];
-    }
-
-    if (!galleryImages.length && initialImage) {
-      galleryImages = [initialImage];
-    }
-
-    let selectedGarmentImage = initialImage || galleryImages[0] || '';
-
-    const garmentPreview = document.getElementById('garmentPreview');
-    const productTitle = document.getElementById('product-title');
-    const buyLink = document.getElementById('buyLink');
-    const buyLinkBottom = document.getElementById('buyLinkBottom');
-    const runBtn = document.getElementById('runBtn');
-    const statusEl = document.getElementById('status');
-    const resultBox = document.getElementById('resultBox');
-    const resultImage = document.getElementById('resultImage');
-    const gallery = document.getElementById('gallery');
-
-    productTitle.textContent = title;
-    buyLink.href = productUrl;
-    buyLinkBottom.href = productUrl;
-
-    if (selectedGarmentImage) {
-      garmentPreview.src = selectedGarmentImage;
-    }
-
-    function renderGallery(images) {
-      gallery.innerHTML = '';
-
-      images.forEach((src) => {
-        const thumb = document.createElement('img');
-        thumb.src = src;
-        thumb.alt = 'صورة منتج';
-
-        if (src === selectedGarmentImage) {
-          thumb.style.border = '2px solid #111';
-        }
-
-        thumb.addEventListener('click', () => {
-          selectedGarmentImage = src;
-          garmentPreview.src = src;
-          renderGallery(images);
-        });
-
-        gallery.appendChild(thumb);
-      });
-    }
-
-    renderGallery(galleryImages);
-
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    runBtn.addEventListener('click', async () => {
-      const file = document.getElementById('personImage').files[0];
-      const consent = document.getElementById('consent').checked;
-
-      if (!selectedGarmentImage) {
-        alert('اختاري صورة المنتج أولًا');
-        return;
-      }
-
-      if (!file) {
-        alert('ارفعي صورتك أولًا');
-        return;
-      }
-
-      if (!consent) {
-        alert('يجب الموافقة على استخدام الصورة');
-        return;
-      }
-
-      runBtn.disabled = true;
-      statusEl.textContent = 'جاري إنشاء المعاينة... قد يستغرق هذا بين 20 و 120 ثانية';
-
-      try {
-        const personBase64 = await fileToBase64(file);
-
-        const res = await fetch('/api/tryon', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model_image: personBase64,
-            garment_image: selectedGarmentImage
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || 'فشل إنشاء المعاينة');
-        }
-
-        resultImage.src = data.result;
-        resultBox.classList.remove('hidden');
-        statusEl.textContent = 'تم إنشاء المعاينة بنجاح';
-      } catch (err) {
-        console.error(err);
-        statusEl.textContent = 'حدث خطأ: ' + err.message;
-      } finally {
-        runBtn.disabled = false;
-      }
-    });
-  </script>
-</body>
-</html> -->
-
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -904,6 +550,20 @@
         min-height: 300px;
       }
     }
+
+    /* اختيار المنتجات من البانر */
+    .catalog-card { margin: 0 24px 4px; }
+    .catalog-tools { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+    .catalog-tools input { flex:1; min-width:160px; color:var(--text); background:#17171a; border:1px solid var(--border); border-radius:14px; padding:14px; font:inherit; }
+    .catalog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(145px,1fr)); gap:12px; }
+    .catalog-item { color:var(--text); background:rgba(255,255,255,.03); border:1px solid var(--border-soft); border-radius:15px; padding:8px; cursor:pointer; text-align:right; font:inherit; }
+    .catalog-item:hover,.catalog-item:focus-visible { border-color:var(--gold); }
+    .catalog-item img { width:100%; aspect-ratio:3/4; object-fit:cover; border-radius:10px; background:#242427; }
+    .catalog-item span { display:block; margin:8px 2px 2px; font-size:13px; line-height:1.5; }
+    .catalog-message { color:var(--muted); font-size:13px; line-height:1.9; margin:12px 0; }
+    .catalog-more { background:transparent; color:var(--gold); border:1px solid var(--border); border-radius:12px; padding:11px 18px; cursor:pointer; margin-top:12px; }
+    .catalog-change { border:1px solid var(--border); color:var(--gold); border-radius:10px; padding:9px 12px; background:transparent; cursor:pointer; margin-top:12px; }
+    @media(max-width:640px) { .catalog-card { margin:0 16px 4px; } }
   </style>
 </head>
 <body>
@@ -926,6 +586,18 @@
         <h1>جربي العباية عليك</h1>
         <p>معاينة ذكية بتصميم تقني فاخر تساعدك على تصوّر الإطلالة قبل الشراء، مع تجربة أنيقة تليق بهوية لافين.</p>
         <div id="product-title" class="product-title">جاري تحميل بيانات المنتج...</div>
+      </div>
+
+
+      <div id="catalogSection" class="card catalog-card hidden">
+        <div class="section-title"><strong>اختاري العباية اللي تبين تجربينها</strong><span>منتجات لاڤين</span></div>
+        <div class="catalog-tools"><input id="catalogSearch" type="search" placeholder="ابحثي باسم العباية أو رقم المنتج" autocomplete="off"></div>
+        <div id="catalogMessage" class="catalog-message" role="status">جاري تحميل العبايات...</div>
+        <div id="catalogGrid" class="catalog-grid"></div>
+        <button id="catalogMore" type="button" class="catalog-more hidden">عرض المزيد من العبايات</button>
+      </div>
+      <div id="changeProductWrap" class="hidden" style="padding:0 24px;">
+        <button id="changeProduct" class="catalog-change" type="button">تغيير العباية</button>
       </div>
 
       <div class="layout">
@@ -1043,160 +715,191 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const initialImage = params.get('image') || '';
-    const productUrl = params.get('product_url') || '#';
-    const title = params.get('title') || 'عباية';
+    const initialProductUrl = params.get('product_url') || '';
+    const initialTitle = params.get('title') || '';
+    const $ = (id) => document.getElementById(id);
+    const garmentPreview = $('garmentPreview');
+    const productTitle = $('product-title');
+    const buyLink = $('buyLink');
+    const buyLinkBottom = $('buyLinkBottom');
+    const runBtn = $('runBtn');
+    const statusEl = $('status');
+    const resultBox = $('resultBox');
+    const resultImage = $('resultImage');
+    const gallery = $('gallery');
+    const loadingEl = $('loading');
+    const personImageInput = $('personImage');
+    const selectedFileBox = $('selectedFileBox');
+    const selectedFileName = $('selectedFileName');
+    const personPreviewThumb = $('personPreviewThumb');
+    const fileBtnText = $('fileBtnText');
+    const catalogSection = $('catalogSection');
+    const catalogSearch = $('catalogSearch');
+    const catalogGrid = $('catalogGrid');
+    const catalogMessage = $('catalogMessage');
+    const catalogMore = $('catalogMore');
+    const changeProductWrap = $('changeProductWrap');
 
     let galleryImages = [];
-    try {
-      galleryImages = JSON.parse(params.get('images') || '[]');
-    } catch (e) {
-      galleryImages = [];
-    }
+    try { const parsed = JSON.parse(params.get('images') || '[]'); if (Array.isArray(parsed)) galleryImages = parsed; } catch (_) {}
+    if (!galleryImages.length && initialImage) galleryImages = [initialImage];
+    let selectedGarmentImage = '';
+    let chosenProduct = null;
+    let catalogPage = 1;
+    let hasNextPage = false;
+    let catalogLoading = false;
+    let catalogRequest = 0;
+    let searchTimer;
 
-    if (!galleryImages.length && initialImage) {
-      galleryImages = [initialImage];
-    }
-
-    let selectedGarmentImage = initialImage || galleryImages[0] || '';
-
-    const garmentPreview = document.getElementById('garmentPreview');
-    const productTitle = document.getElementById('product-title');
-    const buyLink = document.getElementById('buyLink');
-    const buyLinkBottom = document.getElementById('buyLinkBottom');
-    const runBtn = document.getElementById('runBtn');
-    const statusEl = document.getElementById('status');
-    const resultBox = document.getElementById('resultBox');
-    const resultImage = document.getElementById('resultImage');
-    const gallery = document.getElementById('gallery');
-    const loadingEl = document.getElementById('loading');
-
-    const personImageInput = document.getElementById('personImage');
-    const selectedFileBox = document.getElementById('selectedFileBox');
-    const selectedFileName = document.getElementById('selectedFileName');
-    const personPreviewThumb = document.getElementById('personPreviewThumb');
-    const fileBtnText = document.getElementById('fileBtnText');
-
-    productTitle.textContent = title;
-    buyLink.href = productUrl;
-    buyLinkBottom.href = productUrl;
-
-    if (selectedGarmentImage) {
-      garmentPreview.src = selectedGarmentImage;
-    }
+    const safeImage = (value) => {
+      try { const u = new URL(String(value), location.origin); return u.protocol === 'https:' ? u.href : ''; }
+      catch { return ''; }
+    };
+    const safeProductUrl = (value) => {
+      try { const u = new URL(String(value)); return u.protocol === 'https:' && (u.hostname === 'laveenabaya.com' || u.hostname.endsWith('.laveenabaya.com')) ? u.href : ''; }
+      catch { return ''; }
+    };
+    const distinctImages = (images) => [...new Set(images.map(safeImage).filter(Boolean))].slice(0, 18);
 
     function renderGallery(images) {
-      gallery.innerHTML = '';
-
-      images.forEach((src) => {
+      gallery.replaceChildren();
+      for (const src of images) {
         const thumb = document.createElement('img');
         thumb.src = src;
-        thumb.alt = 'صورة منتج';
-
-        if (src === selectedGarmentImage) {
-          thumb.classList.add('active');
-        }
-
-        thumb.addEventListener('click', () => {
-          selectedGarmentImage = src;
-          garmentPreview.src = src;
-          renderGallery(images);
-        });
-
+        thumb.alt = 'صورة العباية - اضغطي للاختيار';
+        thumb.tabIndex = 0;
+        thumb.setAttribute('role','button');
+        if (src === selectedGarmentImage) thumb.classList.add('active');
+        const choose = () => { selectedGarmentImage = src; garmentPreview.src = src; renderGallery(images); resetResult(); };
+        thumb.addEventListener('click',choose);
+        thumb.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); } });
         gallery.appendChild(thumb);
-      });
+      }
     }
-
-    renderGallery(galleryImages);
-
-    personImageInput.addEventListener('change', () => {
-      const file = personImageInput.files && personImageInput.files[0];
-
-      if (!file) {
-        selectedFileBox.classList.add('hidden');
-        selectedFileName.textContent = '';
-        personPreviewThumb.src = '';
-        fileBtnText.textContent = 'اختاري الصورة من جهازك';
-        fileBtnText.classList.remove('active');
-        return;
+    function resetResult() { resultBox.classList.remove('show'); resultImage.removeAttribute('src'); statusEl.textContent=''; }
+    function selectProduct(p) {
+      const imgs = distinctImages(p.images || []);
+      chosenProduct = p;
+      galleryImages = imgs;
+      selectedGarmentImage = imgs[0] || '';
+      productTitle.textContent = p.name;
+      if (selectedGarmentImage) garmentPreview.src = selectedGarmentImage;
+      else garmentPreview.removeAttribute('src');
+      garmentPreview.style.display = selectedGarmentImage ? '' : 'none';
+      renderGallery(imgs);
+      const url = safeProductUrl(p.url);
+      for (const link of [buyLink,buyLinkBottom]) {
+        link.href = url || 'https://laveenabaya.com/ar';
+        link.textContent = url ? (link === buyLink ? 'الرجوع للمنتج' : 'إكمال الشراء') : 'زيارة المتجر';
       }
-
-      selectedFileName.textContent = file.name;
-      fileBtnText.textContent = 'تم اختيار الصورة';
-      fileBtnText.classList.add('active');
-      selectedFileBox.classList.remove('hidden');
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        personPreviewThumb.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    function fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+      resetResult();
+      catalogSection.classList.add('hidden');
+      changeProductWrap.classList.remove('hidden');
+      document.querySelector('.layout').scrollIntoView({behavior:'smooth',block:'start'});
     }
+    function showCatalog() {
+      catalogSection.classList.remove('hidden');
+      changeProductWrap.classList.add('hidden');
+      catalogSection.scrollIntoView({behavior:'smooth',block:'start'});
+      if (!catalogGrid.children.length) loadCatalog(true);
+    }
+    $('changeProduct').addEventListener('click', showCatalog);
 
-    runBtn.addEventListener('click', async () => {
-      const file = personImageInput.files[0];
-      const consent = document.getElementById('consent').checked;
-
-      if (!selectedGarmentImage) {
-        alert('اختاري صورة المنتج أولًا');
-        return;
-      }
-
-      if (!file) {
-        alert('ارفعي صورتك أولًا');
-        return;
-      }
-
-      if (!consent) {
-        alert('يجب الموافقة على استخدام الصورة');
-        return;
-      }
-
-      runBtn.disabled = true;
-      statusEl.textContent = '';
-      loadingEl.classList.add('active');
-
+    async function loadCatalog(reset=false) {
+      if (reset) { catalogPage=1; catalogGrid.replaceChildren(); }
+      if (catalogLoading) return;
+      catalogLoading = true;
+      const request = ++catalogRequest;
+      catalogMore.classList.add('hidden');
+      catalogMessage.textContent = 'جاري تحميل العبايات...';
       try {
-        const personBase64 = await fileToBase64(file);
-
-        const res = await fetch('/api/tryon', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model_image: personBase64,
-            garment_image: selectedGarmentImage
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || 'فشل إنشاء المعاينة');
+        const query = new URLSearchParams({page:String(catalogPage),q:catalogSearch.value.trim()});
+        const response = await fetch('/api/products?' + query.toString());
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'تعذر تحميل المنتجات');
+        if (request !== catalogRequest) return;
+        const items = Array.isArray(payload.products) ? payload.products : [];
+        for (const p of items) {
+          const img = safeImage(p.image);
+          if (!img) continue;
+          const card = document.createElement('button');
+          card.type='button'; card.className='catalog-item';
+          const photo=document.createElement('img');photo.src=img;photo.alt=p.name;photo.loading='lazy';
+          const text=document.createElement('span');text.textContent=p.name;
+          card.append(photo,text);
+          card.addEventListener('click',()=>chooseCatalogProduct(p));
+          catalogGrid.appendChild(card);
         }
+        hasNextPage = !!payload.hasNext;
+        catalogMessage.textContent = catalogGrid.children.length ? 'اضغطي على العباية لعرض صورها وتجربتها.' : 'لم نجد عبايات مطابقة للبحث.';
+        catalogMore.classList.toggle('hidden',!hasNextPage);
+        catalogPage++;
+      } catch(err) {
+        catalogMessage.textContent = err.message + ' — تأكدي من ربط متجر سلة في إعدادات Vercel.';
+      } finally { catalogLoading=false; }
+    }
+    async function chooseCatalogProduct(p) {
+      catalogMessage.textContent='جاري تحميل صور العباية...';
+      try {
+        const response=await fetch('/api/products?id='+encodeURIComponent(p.id));
+        const data=await response.json();
+        if (!response.ok) throw new Error(data.error || 'تعذر تحميل الصور');
+        if (!data.product?.images?.length) throw new Error('لا توجد صور لهذا المنتج');
+        selectProduct(data.product);
+      } catch(err) { catalogMessage.textContent=err.message; }
+    }
+    catalogSearch.addEventListener('input',()=>{
+      clearTimeout(searchTimer);
+      searchTimer=setTimeout(()=>{
+        // الانتظار يمنع إرسال الطلبات المتكررة لكل حرف
+        if (catalogLoading) { catalogRequest++; catalogLoading=false; }
+        loadCatalog(true);
+      },350);
+    });
+    catalogMore.addEventListener('click',()=>loadCatalog());
 
-        resultImage.src = data.result;
-        resultBox.classList.add('show');
-        statusEl.textContent = 'تم إنشاء المعاينة بنجاح';
-        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } catch (err) {
-        console.error(err);
-        statusEl.textContent = 'حدث خطأ: ' + err.message;
-      } finally {
-        runBtn.disabled = false;
-        loadingEl.classList.remove('active');
-      }
+    if (galleryImages.length) {
+      selectProduct({name:initialTitle || 'عباية لاڤين',url:initialProductUrl,images:[initialImage,...galleryImages]});
+    } else {
+      productTitle.textContent='اختاري العباية لتبدأي التجربة';
+      garmentPreview.style.display='none';
+      buyLink.href='https://laveenabaya.com/ar';
+      buyLinkBottom.href='https://laveenabaya.com/ar';
+      buyLink.textContent='زيارة المتجر';
+      buyLinkBottom.textContent='زيارة المتجر';
+      showCatalog();
+    }
+
+    personImageInput.addEventListener('change',()=>{
+      const file=personImageInput.files?.[0];
+      if (!file) { selectedFileBox.classList.add('hidden'); selectedFileName.textContent=''; personPreviewThumb.removeAttribute('src'); fileBtnText.textContent='اختاري الصورة من جهازك';fileBtnText.classList.remove('active');return; }
+      if (!file.type.startsWith('image/')) { alert('اختاري ملف صورة صالح'); personImageInput.value=''; return; }
+      selectedFileName.textContent=file.name;
+      fileBtnText.textContent='تم اختيار الصورة';fileBtnText.classList.add('active');selectedFileBox.classList.remove('hidden');
+      const reader=new FileReader();reader.onload=e=>personPreviewThumb.src=e.target.result;reader.readAsDataURL(file);
+      resetResult();
+    });
+    function fileToBase64(file) {return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});}
+    runBtn.addEventListener('click',async()=>{
+      const file=personImageInput.files?.[0];
+      if (!selectedGarmentImage) return alert('اختاري العباية وصورتها أولًا');
+      if (!file) return alert('ارفعي صورتك أولًا');
+      if (!file.type.startsWith('image/')) return alert('ارفعي صورة صحيحة');
+      if (file.size > 2.5*1024*1024) return alert('حجم الصورة كبير، اختاري صورة أقل من 2.5 ميجابايت');
+      if (!$('consent').checked) return alert('يجب الموافقة على استخدام الصورة');
+      runBtn.disabled=true;resetResult();loadingEl.classList.add('active');
+      try {
+        const personBase64=await fileToBase64(file);
+        const res=await fetch('/api/tryon',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model_image:personBase64,garment_image:selectedGarmentImage})});
+        const data=await res.json();
+        if (!res.ok) throw new Error(data.error||'فشل إنشاء المعاينة');
+        if (!data.result) throw new Error('لم يتم استلام صورة النتيجة');
+        resultImage.src=data.result;resultBox.classList.add('show');statusEl.textContent='تم إنشاء المعاينة بنجاح';
+        resultBox.scrollIntoView({behavior:'smooth',block:'start'});
+      } catch(err) { console.error(err);statusEl.textContent='حدث خطأ: '+err.message; }
+      finally { runBtn.disabled=false;loadingEl.classList.remove('active'); }
     });
   </script>
 </body>
