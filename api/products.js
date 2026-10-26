@@ -8,7 +8,7 @@ const REDIS_TOKEN =
   process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN;
 
 // رقم المتجر التجريبي فقط
-const TEST_MERCHANT_ID = '113026894';
+const TEST_MERCHANT_ID = '2110593632';
 
 async function getRedisValue(key) {
   if (!REDIS_URL || !REDIS_TOKEN) {
