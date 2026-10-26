@@ -161,10 +161,13 @@ export default async function handler(req, res) {
         updated_at: new Date().toISOString()
       };
 
-      await saveToRedis(
-        `salla:merchant:${merchantId}:tokens`,
-        tokenData
-      );
+  // Keep the demo-store mapping separate.
+if (merchantId === '113026894') {
+  await saveToRedis(
+    'salla:test:merchant_id',
+    merchantId
+  );
+}
 
       // Keep this as a test-store mapping only.
       // Do not use it for the live store.
