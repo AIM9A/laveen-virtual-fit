@@ -1,14 +1,11 @@
-
 const SALLA_API = 'https://api.salla.dev/admin/v2';
+const MERCHANT_ID = '2110593632';
 
 const REDIS_URL =
   process.env.UPSTASH_REDIS_REST_KV_REST_API_URL;
 
 const REDIS_TOKEN =
   process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN;
-
-// رقم المتجر التجريبي فقط
-const TEST_MERCHANT_ID = '2110593632';
 
 async function getRedisValue(key) {
   if (!REDIS_URL || !REDIS_TOKEN) {
@@ -35,7 +32,7 @@ async function getRedisValue(key) {
     throw new Error('Redis read failed');
   }
 
-  if (!json.result) {
+  if (json.result == null) {
     return null;
   }
 
@@ -59,42 +56,41 @@ function productImages(product) {
   const images = [];
 
   function add(value) {
+    if (value && typeof value === 'object') {
+      add(value.url);
+      add(value.image);
+      add(value.original);
+      return;
+    }
+
     const url = validUrl(value);
+
     if (url && !images.includes(url)) {
       images.push(url);
     }
   }
 
   add(product.thumbnail);
-add(product.main_image);
-
-  if (typeof product.image === 'string') {
-    add(product.image);
-  } else {
-    add(product.image?.url);
-  }
+  add(product.main_image);
+  add(product.image);
 
   if (Array.isArray(product.images)) {
-    product.images.forEach((image) => {
-      if (typeof image === 'string') {
-        add(image);
-      } else {
-        add(image?.url);
-        add(image?.image);
-      }
-    });
+    product.images.forEach(add);
   }
 
   return images;
 }
 
 function cleanProduct(product) {
+  const images = productImages(product);
+
   return {
     id: product.id,
-    name: product.name || 'عباية',
+    name: product.name || 'منتج',
     sku: product.sku || '',
-    image: productImages(product)[0] || '',
-    images: productImages(product),
+    type: product.type || 'unknown',
+    image: images[0] || '',
+    images,
     product_url: validUrl(
       product.urls?.customer || product.url
     )
@@ -112,7 +108,7 @@ export default async function handler(req, res) {
 
   try {
     const tokens = await getRedisValue(
-      `salla:merchant:${TEST_MERCHANT_ID}:tokens`
+      `salla:merchant:${MERCHANT_ID}:tokens`
     );
 
     if (!tokens?.access_token) {
@@ -121,12 +117,17 @@ export default async function handler(req, res) {
       });
     }
 
-    const page = Math.min(
-      100,
-      Math.max(1, Number.parseInt(req.query.page, 10) || 1)
+    const requestedPage = Number.parseInt(
+      req.query?.page,
+      10
     );
 
+    const page = Number.isFinite(requestedPage)
+      ? Math.min(100, Math.max(1, requestedPage))
+      : 1;
+
     const url = new URL(`${SALLA_API}/products`);
+
     url.searchParams.set('page', String(page));
     url.searchParams.set('per_page', '50');
     url.searchParams.set('status', 'sale');
@@ -153,34 +154,54 @@ export default async function handler(req, res) {
       throw new Error('Invalid Salla products response');
     }
 
-    const regularProducts = json.data
-  .filter((p) => p.type === 'product');
+    const types = {};
+    const statuses = {};
 
-const saleProducts = regularProducts
-  .filter((p) => p.status === 'sale');
+    for (const product of json.data) {
+      const type = String(
+        product.type || 'unknown'
+      );
 
-const cleanedProducts = saleProducts
-  .map(cleanProduct);
+      const status = String(
+        product.status || 'unknown'
+      );
 
-const products = cleanedProducts
-  .filter((p) => p.images.length > 0);
+      types[type] = (types[type] || 0) + 1;
 
-const diagnostics = {
-  received: json.data.length,
-  regular_products: regularProducts.length,
-  sale_products: saleProducts.length,
-  products_with_images: products.length
-};
+      statuses[status] =
+        (statuses[status] || 0) + 1;
+    }
 
- return res.status(200).json({
-  success: true,
-  products,
-  diagnostics,
-  pagination: json.pagination || null
-});
+    // اختبار المنتجات المعروضة للبيع.
+    // لا نستبعد المنتجات بسبب اختلاف النوع.
+    const products = json.data
+      .filter((product) => product.status === 'sale')
+      .map(cleanProduct)
+      .filter(
+        (product) =>
+          product.images.length > 0 &&
+          product.product_url
+      );
+
+    return res.status(200).json({
+      success: true,
+      merchant_id: MERCHANT_ID,
+      products,
+      diagnostics: {
+        received: json.data.length,
+        types,
+        statuses,
+        sale_products_with_images_and_url:
+          products.length
+      },
+      pagination: json.pagination || null
+    });
 
   } catch (error) {
-    console.error('Products API error:', error.message);
+    console.error(
+      'Products live test failed:',
+      error.message
+    );
 
     return res.status(500).json({
       error: 'Unable to load products'
