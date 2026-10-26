@@ -113,9 +113,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const tokens = await getRedisValue(
-      `salla:merchant:${MERCHANT_ID}:tokens`
-    );
+    console.log('Salla refresh token check:', {
+  merchant_id: MERCHANT_ID,
+  has_refresh_token:
+    typeof tokens?.refresh_token === 'string' &&
+    tokens.refresh_token.length > 0,
+  has_expiry: Boolean(tokens?.expires)
+});
     if (!tokens?.access_token) {
       return res.status(503).json({
         error: 'Salla store authorization not found'
