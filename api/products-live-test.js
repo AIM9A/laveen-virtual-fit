@@ -1,6 +1,7 @@
 const SALLA_API = 'https://api.salla.dev/admin/v2';
 // const MERCHANT_ID = '2110593632';
-const TEST_MERCHANT_ID = '113026894';
+// المتجر التجريبي فقط
+const MERCHANT_ID = '113026894';
 const REDIS_URL = process.env.UPSTASH_REDIS_REST_KV_REST_API_URL;
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN;
 
