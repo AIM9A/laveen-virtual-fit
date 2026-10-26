@@ -1,5 +1,4 @@
 const SALLA_API = 'https://api.salla.dev/admin/v2';
-
 const MERCHANT_ID = '2110593632';
 
 const REDIS_URL =
@@ -7,9 +6,6 @@ const REDIS_URL =
 
 const REDIS_TOKEN =
   process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN;
-
-
-// Read the stored Salla authorization.
 
 async function getStoredTokens() {
   if (!REDIS_URL || !REDIS_TOKEN) {
@@ -49,28 +45,16 @@ async function getStoredTokens() {
     : json.result;
 }
 
-
-// Accept HTTPS links only.
-
 function httpsUrl(value) {
-  if (typeof value !== 'string') {
-    return '';
-  }
+  if (typeof value !== 'string') return '';
 
   try {
     const url = new URL(value);
-
-    return url.protocol === 'https:'
-      ? url.href
-      : '';
-
+    return url.protocol === 'https:' ? url.href : '';
   } catch {
     return '';
   }
 }
-
-
-// Extract all available product images.
 
 function imagesOf(product) {
   const images = [];
@@ -101,17 +85,11 @@ function imagesOf(product) {
   return images;
 }
 
-
-// Include Arabic and English abaya names.
-
 function isAbaya(product) {
-  const name = String(product.name || '');
-
-  return /عباي[ةه]|abaya/i.test(name);
+  return /عباي[ةه]|abaya/i.test(
+    String(product.name || '')
+  );
 }
-
-
-// Prepare product data for the storefront.
 
 function cleanProduct(product) {
   const images = imagesOf(product);
@@ -130,28 +108,16 @@ function cleanProduct(product) {
   };
 }
 
+async function fetchPage(accessToken, page, keyword) {
+  const url = new URL(`${SALLA_API}/products`);
 
-// Fetch one page from Salla.
+  url.searchParams.set('page', String(page));
+  url.searchParams.set('per_page', '50');
+  url.searchParams.set('status', 'sale');
 
-async function fetchPage(accessToken, page) {
-  const url = new URL(
-    `${SALLA_API}/products`
-  );
-
-  url.searchParams.set(
-    'page',
-    String(page)
-  );
-
-  url.searchParams.set(
-    'per_page',
-    '50'
-  );
-
-  url.searchParams.set(
-    'status',
-    'sale'
-  );
+  if (keyword) {
+    url.searchParams.set('keyword', keyword);
+  }
 
   const response = await fetch(url, {
     headers: {
@@ -163,41 +129,26 @@ async function fetchPage(accessToken, page) {
   });
 
   if (!response.ok) {
-    const error = new Error(
-      'Salla API rejected request'
-    );
-
+    const error = new Error('Salla API rejected request');
     error.status = response.status;
-
     throw error;
   }
 
   const json = await response.json();
 
   if (!Array.isArray(json.data)) {
-    throw new Error(
-      'Invalid Salla response'
-    );
+    throw new Error('Invalid Salla response');
   }
 
   return json;
 }
 
-
-// Vercel function configuration.
-
 export const config = {
   maxDuration: 30
 };
 
-
-// Main products API.
-
 export default async function handler(req, res) {
-  res.setHeader(
-    'Cache-Control',
-    'no-store'
-  );
+  res.setHeader('Cache-Control', 'no-store');
 
   if (req.method !== 'GET') {
     return res.status(405).json({
@@ -206,6 +157,37 @@ export default async function handler(req, res) {
   }
 
   try {
+    const q = String(req.query.q || '')
+      .trim()
+      .slice(0, 80);
+
+    const rawCursor = String(
+      req.query.cursor || '1-0'
+    );
+
+    const cursorMatch =
+      /^(\d{1,2})-(\d{1,2})$/.exec(rawCursor);
+
+    if (!cursorMatch) {
+      return res.status(400).json({
+        error: 'Invalid cursor'
+      });
+    }
+
+    let page = Number(cursorMatch[1]);
+    let offset = Number(cursorMatch[2]);
+
+    if (
+      page < 1 ||
+      page > 20 ||
+      offset < 0 ||
+      offset >= 50
+    ) {
+      return res.status(400).json({
+        error: 'Invalid cursor'
+      });
+    }
+
     const tokens = await getStoredTokens();
 
     if (
@@ -217,101 +199,107 @@ export default async function handler(req, res) {
       });
     }
 
-    // Fetch the first page.
-
-    const first = await fetchPage(
-      tokens.access_token,
-      1
-    );
-
-    const totalPages =
-      Number(first.pagination?.totalPages) || 1;
-
-    if (
-      !Number.isInteger(totalPages) ||
-      totalPages < 1 ||
-      totalPages > 20
-    ) {
-      throw new Error(
-        'Unexpected number of product pages'
-      );
-    }
-
-    const rawProducts = [...first.data];
-
-    // Fetch remaining pages in batches of three.
-
-    for (
-      let start = 2;
-      start <= totalPages;
-      start += 3
-    ) {
-      const batch = [];
-
-      for (
-        let page = start;
-        page <= Math.min(
-          start + 2,
-          totalPages
-        );
-        page++
-      ) {
-        batch.push(
-          fetchPage(
-            tokens.access_token,
-            page
-          )
-        );
-      }
-
-      const results = await Promise.all(batch);
-
-      for (const result of results) {
-        rawProducts.push(...result.data);
-      }
-    }
-
-    // Keep available abayas and remove duplicates.
-
+    const products = [];
     const seen = new Set();
 
-    const products = rawProducts
-      .filter(
-        (product) =>
-          product.status === 'sale' &&
-          isAbaya(product)
-      )
-      .map(cleanProduct)
-      .filter((product) => {
+    let nextCursor = null;
+
+    const normalized = (value) =>
+      String(value || '')
+        .toLowerCase()
+        .replace(/\s+/g, '');
+
+    const needle = normalized(q);
+
+    // Load only enough Salla pages for 30 abayas.
+    while (page <= 20) {
+      const result = await fetchPage(
+        tokens.access_token,
+        page,
+        q
+      );
+
+      const totalPages =
+        Number(result.pagination?.totalPages) || 1;
+
+      if (
+        !Number.isInteger(totalPages) ||
+        totalPages < 1 ||
+        totalPages > 20
+      ) {
+        throw new Error(
+          'Unexpected number of product pages'
+        );
+      }
+
+      if (page > totalPages) {
+        break;
+      }
+
+      for (
+        let index = offset;
+        index < result.data.length;
+        index++
+      ) {
+        const raw = result.data[index];
+
+        if (
+          raw.status !== 'sale' ||
+          !isAbaya(raw)
+        ) {
+          continue;
+        }
+
+        if (
+          needle &&
+          !normalized(raw.name).includes(needle) &&
+          !normalized(raw.sku).includes(needle)
+        ) {
+          continue;
+        }
+
+        const product = cleanProduct(raw);
+
         if (
           !product.id ||
           !product.images.length ||
           !product.product_url ||
-          seen.has(product.id)
+          seen.has(String(product.id))
         ) {
-          return false;
+          continue;
         }
 
-        seen.add(product.id);
+        // Save the position of the next batch.
+        if (products.length === 30) {
+          nextCursor = `${page}-${index}`;
+          break;
+        }
 
-        return true;
-      });
+        products.push(product);
+        seen.add(String(product.id));
+      }
 
-    // Cache public product data for five minutes.
-    // Access tokens are never returned to visitors.
+      if (nextCursor || page >= totalPages) {
+        break;
+      }
+
+      page++;
+      offset = 0;
+    }
 
     res.setHeader(
       'Cache-Control',
-      'public, s-maxage=300, stale-while-revalidate=600'
+      'public, s-maxage=120, stale-while-revalidate=300'
     );
 
     return res.status(200).json({
       success: true,
       products,
+      hasNext: !!nextCursor,
+      nextCursor,
       pagination: {
-        total: products.length,
-        currentPage: 1,
-        totalPages: 1
+        count: products.length,
+        perPage: 30
       }
     });
 
