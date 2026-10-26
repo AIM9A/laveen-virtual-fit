@@ -9,20 +9,13 @@
   <style>
     :root {
       --bg: #0d0d0f;
-      --bg-soft: #141417;
-      --card: rgba(255,255,255,0.04);
-      --card-2: rgba(255,255,255,0.06);
-      --border: rgba(216,178,106,0.18);
-      --border-soft: rgba(255,255,255,0.08);
+      --card: rgba(255,255,255,.04);
+      --border: rgba(216,178,106,.18);
+      --border-soft: rgba(255,255,255,.08);
       --text: #f5efe6;
       --muted: #bcae98;
       --gold: #d8b26a;
-      --gold-soft: #9e7d45;
-      --success: #d8b26a;
-      --danger: #ffb4b4;
       --shadow: 0 20px 60px rgba(0,0,0,.35);
-      --radius: 24px;
-      --radius-sm: 16px;
     }
 
     * {
@@ -32,7 +25,9 @@
     html, body {
       margin: 0;
       padding: 0;
+      min-height: 100%;
       font-family: Arial, sans-serif;
+      color: var(--text);
       background:
         radial-gradient(
           circle at top right,
@@ -41,11 +36,9 @@
         ),
         linear-gradient(
           180deg,
-          #0b0b0d 0%,
-          #111114 100%
+          #0b0b0d,
+          #111114
         );
-      color: var(--text);
-      min-height: 100%;
     }
 
     body::before {
@@ -71,21 +64,21 @@
       position: relative;
       z-index: 1;
       max-width: 1220px;
-      margin: 0 auto;
+      margin: auto;
       padding: 24px;
     }
 
     .shell {
       border: 1px solid var(--border);
+      border-radius: 32px;
+      overflow: hidden;
       background: linear-gradient(
         180deg,
         rgba(255,255,255,.04),
         rgba(255,255,255,.02)
       );
       backdrop-filter: blur(12px);
-      border-radius: 32px;
       box-shadow: var(--shadow);
-      overflow: hidden;
     }
 
     .topbar {
@@ -106,56 +99,40 @@
     .brand-mark {
       width: 44px;
       height: 44px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
       border: 1px solid var(--border);
-      background: radial-gradient(
-        circle at center,
-        rgba(216,178,106,.12),
-        rgba(216,178,106,.02)
-      );
+      border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
     }
 
-    .logo-wrap {
-      background: transparent !important;
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    .logo-wrap img {
+    .brand-mark img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
       display: block;
+      object-fit: cover;
     }
 
     .brand-text strong {
       display: block;
       font-size: 15px;
-      font-weight: 700;
     }
 
     .brand-text span {
       display: block;
       color: var(--muted);
       font-size: 12px;
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
       border: 1px solid var(--border);
       color: var(--gold);
       background: rgba(216,178,106,.06);
       border-radius: 999px;
       padding: 9px 14px;
       font-size: 12px;
-      white-space: nowrap;
     }
 
     .hero {
@@ -165,8 +142,7 @@
     .hero h1 {
       margin: 0;
       font-size: clamp(28px, 4vw, 46px);
-      line-height: 1.1;
-      letter-spacing: -.02em;
+      line-height: 1.2;
     }
 
     .hero p {
@@ -183,13 +159,6 @@
       font-size: 14px;
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 22px;
-      padding: 22px 24px 28px;
-    }
-
     .card {
       background: linear-gradient(
         180deg,
@@ -197,29 +166,9 @@
         rgba(255,255,255,.02)
       );
       border: 1px solid var(--border-soft);
-      border-radius: var(--radius);
+      border-radius: 24px;
       padding: 20px;
       position: relative;
-      overflow: hidden;
-    }
-
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(255,255,255,.03) 40%,
-        transparent 80%
-      );
-      transform: translateX(-120%);
-      pointer-events: none;
-    }
-
-    .card:hover::after {
-      transform: translateX(120%);
-      transition: 1.2s ease;
     }
 
     .section-title {
@@ -232,12 +181,153 @@
 
     .section-title strong {
       font-size: 16px;
-      font-weight: 700;
     }
 
     .section-title span {
       color: var(--muted);
       font-size: 12px;
+    }
+
+    /* Product catalog */
+
+    .catalog-card {
+      margin: 0 24px 4px;
+    }
+
+    .catalog-tools {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .catalog-tools input {
+      width: 100%;
+      min-width: 0;
+      color: var(--text);
+      background: #17171a;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      font: inherit;
+      outline: none;
+    }
+
+    .catalog-tools input:focus {
+      border-color: var(--gold);
+    }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fill, minmax(145px, 1fr));
+      gap: 12px;
+    }
+
+    .catalog-item {
+      color: var(--text);
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border-soft);
+      border-radius: 15px;
+      padding: 8px;
+      cursor: pointer;
+      text-align: right;
+      font: inherit;
+      transition: .2s ease;
+    }
+
+    .catalog-item:hover,
+    .catalog-item:focus-visible {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .catalog-item img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #242427;
+      display: block;
+    }
+
+    .catalog-item span {
+      display: block;
+      margin: 8px 2px 2px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .catalog-message {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.9;
+      margin: 12px 0;
+    }
+
+    /* Load more button */
+
+    .catalog-more {
+      display: block;
+      margin: 20px auto 4px;
+      min-width: 180px;
+      min-height: 46px;
+      background: rgba(216,178,106,.06);
+      color: var(--gold);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 22px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .catalog-more:hover:not(:disabled) {
+      border-color: var(--gold);
+      background: rgba(216,178,106,.11);
+    }
+
+    .catalog-more:disabled {
+      opacity: .75;
+      cursor: wait;
+    }
+
+    .catalog-more.loading-more::before {
+      content: "";
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-left: 9px;
+      vertical-align: middle;
+      border: 2px solid rgba(216,178,106,.25);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: catalogSpin .8s linear infinite;
+    }
+
+    @keyframes catalogSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .catalog-change {
+      border: 1px solid var(--border);
+      color: var(--gold);
+      border-radius: 10px;
+      padding: 9px 12px;
+      background: transparent;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    /* Try-on layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
+      padding: 22px 24px 28px;
     }
 
     .preview-frame {
@@ -285,18 +375,20 @@
       border: 1px solid rgba(255,255,255,.08);
       background: #18181b;
       cursor: pointer;
-      transition: .22s ease;
+      transition: .2s ease;
     }
 
     .gallery img:hover {
       transform: translateY(-2px);
-      border-color: rgba(216,178,106,.4);
+      border-color: var(--gold);
     }
 
     .gallery img.active {
       border: 2px solid var(--gold);
       box-shadow: 0 0 0 4px rgba(216,178,106,.12);
     }
+
+    /* Image upload */
 
     .upload-zone {
       border: 1px dashed rgba(216,178,106,.35);
@@ -333,7 +425,6 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.8;
-      max-width: 380px;
     }
 
     .file-wrap {
@@ -352,10 +443,9 @@
     .file-btn {
       width: 100%;
       min-height: 52px;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
       border: 1px solid var(--border);
       background: #17171a;
       color: var(--text);
@@ -363,7 +453,6 @@
       padding: 14px 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: .2s ease;
     }
 
     .file-btn.active {
@@ -412,6 +501,8 @@
       line-height: 1.8;
     }
 
+    /* Buttons */
+
     .actions {
       display: flex;
       gap: 12px;
@@ -427,12 +518,11 @@
       font-weight: 700;
       cursor: pointer;
       border: none;
-      transition: .2s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      transition: .2s ease;
     }
 
     .btn-primary {
@@ -444,12 +534,10 @@
       );
       color: #fff;
       border: 1px solid #262626;
-      box-shadow: 0 10px 22px rgba(0,0,0,.25);
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(0,0,0,.32);
     }
 
     .btn-primary:disabled {
@@ -462,10 +550,6 @@
       background: transparent;
       color: var(--text);
       border: 1px solid rgba(255,255,255,.08);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255,255,255,.04);
     }
 
     .status {
@@ -491,7 +575,6 @@
       border-radius: 999px;
       background: rgba(255,255,255,.08);
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.05);
     }
 
     .loading-bar span {
@@ -512,11 +595,12 @@
       0% {
         transform: translateX(-120%);
       }
-
       100% {
         transform: translateX(320%);
       }
     }
+
+    /* Result */
 
     .result-card {
       margin: 0 24px 28px;
@@ -532,24 +616,13 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 14px;
-      gap: 10px;
-    }
-
-    .result-header strong {
-      font-size: 18px;
     }
 
     .result-image-wrap {
       border: 1px solid var(--border);
       border-radius: 24px;
       overflow: hidden;
-      background:
-        radial-gradient(
-          circle at top,
-          rgba(216,178,106,.08),
-          transparent 22%
-        ),
-        #121215;
+      background: #121215;
       padding: 14px;
     }
 
@@ -568,100 +641,6 @@
 
     .hidden {
       display: none !important;
-    }
-
-    /* Product catalog */
-
-    .catalog-card {
-      margin: 0 24px 4px;
-    }
-
-    .catalog-tools {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .catalog-tools input {
-      flex: 1;
-      min-width: 160px;
-      color: var(--text);
-      background: #17171a;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      font: inherit;
-    }
-
-    .catalog-grid {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fill, minmax(145px, 1fr));
-      gap: 12px;
-    }
-
-    .catalog-item {
-      color: var(--text);
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border-soft);
-      border-radius: 15px;
-      padding: 8px;
-      cursor: pointer;
-      text-align: right;
-      font: inherit;
-    }
-
-    .catalog-item:hover,
-    .catalog-item:focus-visible {
-      border-color: var(--gold);
-    }
-
-    .catalog-item img {
-      width: 100%;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      border-radius: 10px;
-      background: #242427;
-    }
-
-    .catalog-item span {
-      display: block;
-      margin: 8px 2px 2px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .catalog-message {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.9;
-      margin: 12px 0;
-    }
-
-    .catalog-more {
-      background: transparent;
-      color: var(--gold);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 18px;
-      cursor: pointer;
-      margin-top: 12px;
-    }
-
-    .catalog-more:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-
-    .catalog-change {
-      border: 1px solid var(--border);
-      color: var(--gold);
-      border-radius: 10px;
-      padding: 9px 12px;
-      background: transparent;
-      cursor: pointer;
-      margin-top: 12px;
     }
 
     @media (max-width: 920px) {
@@ -687,10 +666,6 @@
         padding-top: 22px;
       }
 
-      .topbar {
-        gap: 12px;
-      }
-
       .badge {
         display: none;
       }
@@ -700,8 +675,8 @@
       }
 
       .btn,
-      .btn-secondary,
-      .btn-primary {
+      .btn-primary,
+      .btn-secondary {
         width: 100%;
       }
 
@@ -712,6 +687,11 @@
       .catalog-card {
         margin: 0 16px 4px;
       }
+
+      .catalog-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
     }
   </style>
 </head>
@@ -720,11 +700,12 @@
   <div class="page">
     <div class="shell">
 
+      <!-- Header -->
+
       <div class="topbar">
         <div class="brand">
-          <div class="brand-mark logo-wrap">
+          <div class="brand-mark">
             <img
-              id="brandLogo"
               src="https://www.image2url.com/r2/default/images/1776639012747-f8fa678e-0cb3-4f11-b3ad-9fc4b01d27be.png"
               alt="Laveen Logo"
             >
@@ -736,24 +717,31 @@
           </div>
         </div>
 
-        <div class="badge">Powered by AI</div>
+        <div class="badge">
+          Powered by AI
+        </div>
       </div>
+
+      <!-- Hero -->
 
       <div class="hero">
         <h1>جربي العباية عليك</h1>
 
         <p>
-          معاينة ذكية بتصميم تقني فاخر تساعدك
-          على تصوّر الإطلالة قبل الشراء،
+          معاينة ذكية بتصميم تقني فاخر
+          تساعدك على تصوّر الإطلالة قبل الشراء،
           مع تجربة أنيقة تليق بهوية لافين.
         </p>
 
-        <div id="product-title" class="product-title">
+        <div
+          id="product-title"
+          class="product-title"
+        >
           جاري تحميل بيانات المنتج...
         </div>
       </div>
 
-      <!-- Product selection -->
+      <!-- Abaya catalog -->
 
       <div
         id="catalogSection"
@@ -792,8 +780,9 @@
           id="catalogMore"
           type="button"
           class="catalog-more hidden"
+          aria-live="polite"
         >
-          تحميل 30 عباية إضافية
+          تحميل المزيد
         </button>
       </div>
 
@@ -811,7 +800,7 @@
         </button>
       </div>
 
-      <!-- Virtual fitting area -->
+      <!-- Virtual fitting -->
 
       <div class="layout">
 
@@ -877,21 +866,19 @@
                 display:flex;
                 align-items:center;
                 gap:10px;
-                padding:10px 12px;
+                padding:10px;
                 border:1px solid var(--border);
                 border-radius:14px;
                 background:rgba(216,178,106,.05);
               ">
                 <img
                   id="personPreviewThumb"
-                  src=""
                   alt="معاينة الصورة"
                   style="
                     width:48px;
                     height:48px;
                     object-fit:cover;
                     border-radius:12px;
-                    border:1px solid rgba(255,255,255,.08);
                   "
                 >
 
@@ -907,10 +894,9 @@
                     id="selectedFileName"
                     style="
                       font-size:13px;
-                      color:var(--text);
-                      white-space:nowrap;
                       overflow:hidden;
                       text-overflow:ellipsis;
+                      white-space:nowrap;
                     "
                   ></div>
                 </div>
@@ -989,7 +975,7 @@
         </div>
       </div>
 
-      <!-- Fitting result -->
+      <!-- Result -->
 
       <div
         id="resultBox"
@@ -1024,9 +1010,8 @@
 
           <div class="bottom-note">
             هذه المعاينة تقريبية للشكل العام،
-            وقد تختلف النتيجة النهائية
-            بحسب القصة والخامة ووضعية
-            الصورة والإضاءة.
+            وقد تختلف النتيجة النهائية بحسب القصة
+            والخامة ووضعية الصورة والإضاءة.
           </div>
         </div>
       </div>
@@ -1036,7 +1021,7 @@
 
   <script>
     const params = new URLSearchParams(
-      location.search
+      window.location.search
     );
 
     const initialImage =
@@ -1053,8 +1038,10 @@
 
     const garmentPreview = $('garmentPreview');
     const productTitle = $('product-title');
+
     const buyLink = $('buyLink');
     const buyLinkBottom = $('buyLinkBottom');
+
     const runBtn = $('runBtn');
     const statusEl = $('status');
     const resultBox = $('resultBox');
@@ -1097,6 +1084,7 @@
     let chosenProduct = null;
 
     // Pagination state
+
     let catalogCursor = null;
     let hasNextPage = false;
     let catalogLoading = false;
@@ -1113,6 +1101,7 @@
         return url.protocol === 'https:'
           ? url.href
           : '';
+
       } catch {
         return '';
       }
@@ -1124,11 +1113,17 @@
 
         const allowed =
           url.hostname === 'laveenabaya.com' ||
-          url.hostname.endsWith('.laveenabaya.com');
+          url.hostname.endsWith(
+            '.laveenabaya.com'
+          );
 
-        return url.protocol === 'https:' && allowed
+        return (
+          url.protocol === 'https:' &&
+          allowed
+        )
           ? url.href
           : '';
+
       } catch {
         return '';
       }
@@ -1137,7 +1132,9 @@
     function distinctImages(images) {
       return [
         ...new Set(
-          images.map(safeImage).filter(Boolean)
+          images
+            .map(safeImage)
+            .filter(Boolean)
         )
       ].slice(0, 18);
     }
@@ -1251,7 +1248,9 @@
 
       resetResult();
 
-      catalogSection.classList.add('hidden');
+      catalogSection.classList.add(
+        'hidden'
+      );
 
       changeProductWrap.classList.remove(
         'hidden'
@@ -1288,7 +1287,8 @@
       showCatalog
     );
 
-    // Fetch 30 abayas per request.
+    // Load 30 abayas per request
+
     async function loadCatalog(reset = false) {
       if (reset) {
         catalogCursor = null;
@@ -1303,10 +1303,39 @@
 
       const request = ++catalogRequest;
 
-      catalogMore.classList.add('hidden');
+      const loadingMore =
+        !reset &&
+        catalogGrid.children.length > 0;
 
-      catalogMessage.textContent =
-        'جاري تحميل العبايات...';
+      if (loadingMore) {
+        // Show loading indicator on button
+
+        catalogMore.disabled = true;
+
+        catalogMore.classList.add(
+          'loading-more'
+        );
+
+        catalogMore.classList.remove(
+          'hidden'
+        );
+
+        catalogMore.textContent =
+          'جاري التحميل...';
+
+        catalogMore.setAttribute(
+          'aria-busy',
+          'true'
+        );
+
+      } else {
+        catalogMore.classList.add(
+          'hidden'
+        );
+
+        catalogMessage.textContent =
+          'جاري تحميل العبايات...';
+      }
 
       try {
         const query = new URLSearchParams({
@@ -1355,13 +1384,17 @@
           photo.src = image;
           photo.alt = product.name;
           photo.loading = 'lazy';
+          photo.decoding = 'async';
 
           const text =
             document.createElement('span');
 
           text.textContent = product.name;
 
-          card.append(photo, text);
+          card.append(
+            photo,
+            text
+          );
 
           card.addEventListener(
             'click',
@@ -1373,7 +1406,8 @@
           catalogGrid.appendChild(card);
         }
 
-        hasNextPage = !!payload.hasNext;
+        hasNextPage =
+          !!payload.hasNext;
 
         catalogCursor =
           payload.nextCursor || null;
@@ -1395,10 +1429,25 @@
 
       } finally {
         catalogLoading = false;
+
+        catalogMore.disabled = false;
+
+        catalogMore.classList.remove(
+          'loading-more'
+        );
+
+        catalogMore.textContent =
+          'تحميل المزيد';
+
+        catalogMore.removeAttribute(
+          'aria-busy'
+        );
       }
     }
 
-    // Display product images directly.
+    // Select a product without
+    // fetching its images again
+
     function chooseCatalogProduct(product) {
       const images = Array.isArray(
         product.images
@@ -1428,7 +1477,8 @@
       });
     }
 
-    // Search by product name or SKU.
+    // Search products
+
     catalogSearch.addEventListener(
       'input',
       () => {
@@ -1445,15 +1495,19 @@
       }
     );
 
-    // Load the next 30 abayas.
+    // Load more products
+
     catalogMore.addEventListener(
       'click',
       () => {
-        loadCatalog();
+        if (!catalogLoading && hasNextPage) {
+          loadCatalog();
+        }
       }
     );
 
-    // Initial product selection.
+    // Initial state
+
     if (galleryImages.length) {
       selectProduct({
         name:
@@ -1465,6 +1519,7 @@
           ...galleryImages
         ]
       });
+
     } else {
       productTitle.textContent =
         'اختاري العباية لتبدأي التجربة';
@@ -1487,7 +1542,8 @@
       showCatalog();
     }
 
-    // Customer image upload.
+    // Upload customer image
+
     personImageInput.addEventListener(
       'change',
       () => {
@@ -1516,7 +1572,9 @@
         }
 
         if (!file.type.startsWith('image/')) {
-          alert('اختاري ملف صورة صالح');
+          alert(
+            'اختاري ملف صورة صالح'
+          );
 
           personImageInput.value = '';
 
@@ -1529,7 +1587,9 @@
         fileBtnText.textContent =
           'تم اختيار الصورة';
 
-        fileBtnText.classList.add('active');
+        fileBtnText.classList.add(
+          'active'
+        );
 
         selectedFileBox.classList.remove(
           'hidden'
@@ -1564,7 +1624,8 @@
       );
     }
 
-    // Virtual try-on with FASHN AI.
+    // Virtual try-on
+
     runBtn.addEventListener(
       'click',
       async () => {
@@ -1589,7 +1650,10 @@
           );
         }
 
-        if (file.size > 2.5 * 1024 * 1024) {
+        if (
+          file.size >
+          2.5 * 1024 * 1024
+        ) {
           return alert(
             'حجم الصورة كبير، اختاري صورة أقل من 2.5 ميجابايت'
           );
@@ -1605,7 +1669,9 @@
 
         resetResult();
 
-        loadingEl.classList.add('active');
+        loadingEl.classList.add(
+          'active'
+        );
 
         try {
           const personBase64 =
@@ -1643,9 +1709,12 @@
             );
           }
 
-          resultImage.src = data.result;
+          resultImage.src =
+            data.result;
 
-          resultBox.classList.add('show');
+          resultBox.classList.add(
+            'show'
+          );
 
           statusEl.textContent =
             'تم إنشاء المعاينة بنجاح';
@@ -1659,7 +1728,8 @@
           console.error(error);
 
           statusEl.textContent =
-            'حدث خطأ: ' + error.message;
+            'حدث خطأ: ' +
+            error.message;
 
         } finally {
           runBtn.disabled = false;
