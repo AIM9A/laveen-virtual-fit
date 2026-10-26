@@ -1,3 +1,67 @@
+const SALLA_API = 'https://api.salla.dev/admin/v2';
+const MERCHANT_ID = '2110593632';
+
+const REDIS_URL = process.env.UPSTASH_REDIS_REST_KV_REST_API_URL;
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN;
+
+async function getRedisValue(key) {
+  if (!REDIS_URL || !REDIS_TOKEN) {
+    throw new Error('Redis environment variables missing');
+  }
+
+  const response = await fetch(REDIS_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${REDIS_TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(['GET', key]),
+    cache: 'no-store'
+  });
+
+  if (!response.ok) throw new Error('Redis connection failed');
+  const json = await response.json();
+  if (json.error) throw new Error('Redis read failed');
+  if (json.result == null) return null;
+  return typeof json.result === 'string'
+    ? JSON.parse(json.result)
+    : json.result;
+}
+
+function validUrl(value) {
+  if (typeof value !== 'string') return '';
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' ? url.href : '';
+  } catch {
+    return '';
+  }
+}
+
+function productImages(product) {
+  const images = [];
+
+  function add(value) {
+    if (value && typeof value === 'object') {
+      add(value.url);
+      add(value.image);
+      add(value.original);
+      return;
+    }
+    const url = validUrl(value);
+    if (url && !images.includes(url)) images.push(url);
+  }
+
+  add(product.thumbnail);
+  add(product.main_image);
+  add(product.image);
+  if (Array.isArray(product.images)) {
+    product.images.forEach(add);
+  }
+  return images;
+}
+
+function cleanProduct(product) {
   const images = productImages(product);
   return {
     id: product.id,
