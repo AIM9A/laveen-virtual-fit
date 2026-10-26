@@ -172,11 +172,12 @@ const diagnostics = {
   products_with_images: products.length
 };
 
-    return res.status(200).json({
-      success: true,
-      products,
-      pagination: json.pagination || null
-    });
+ return res.status(200).json({
+  success: true,
+  products,
+  diagnostics,
+  pagination: json.pagination || null
+});
 
   } catch (error) {
     console.error('Products API error:', error.message);
