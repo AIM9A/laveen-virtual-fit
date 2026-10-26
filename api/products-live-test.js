@@ -113,6 +113,10 @@ export default async function handler(req, res) {
   }
 
   try {
+
+    const tokens = await getRedisValue(
+  `salla:merchant:${MERCHANT_ID}:tokens`
+);
     console.log('Salla refresh token check:', {
   merchant_id: MERCHANT_ID,
   has_refresh_token:
