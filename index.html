@@ -752,6 +752,7 @@
     let catalogLoading = false;
     let catalogRequest = 0;
     let searchTimer;
+    let catalogProductsPromise = null;
 
     const safeImage = (value) => {
       try { const u = new URL(String(value), location.origin); return u.protocol === 'https:' ? u.href : ''; }
@@ -807,6 +808,27 @@
     }
     $('changeProduct').addEventListener('click', showCatalog);
 
+    function getCatalogProducts() {
+      if (!catalogProductsPromise) {
+        catalogProductsPromise = fetch('/api/products')
+          .then(async (response) => {
+            const payload = await response.json();
+            if (!response.ok) {
+              throw new Error(payload.error || 'تعذر تحميل المنتجات');
+            }
+            if (!Array.isArray(payload.products)) {
+              throw new Error('بيانات العبايات غير صحيحة');
+            }
+            return payload.products;
+          })
+          .catch((error) => {
+            catalogProductsPromise = null;
+            throw error;
+          });
+      }
+      return catalogProductsPromise;
+    }
+
     async function loadCatalog(reset=false) {
       if (reset) { catalogPage=1; catalogGrid.replaceChildren(); }
       if (catalogLoading) return;
@@ -815,12 +837,15 @@
       catalogMore.classList.add('hidden');
       catalogMessage.textContent = 'جاري تحميل العبايات...';
       try {
-        const query = new URLSearchParams({page:String(catalogPage),q:catalogSearch.value.trim()});
-        const response = await fetch('/api/products?' + query.toString());
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload.error || 'تعذر تحميل المنتجات');
+        const allProducts = await getCatalogProducts();
         if (request !== catalogRequest) return;
-        const items = Array.isArray(payload.products) ? payload.products : [];
+        const searchTerm = catalogSearch.value.trim().toLowerCase().replace(/\s+/g, '');
+        const items = allProducts.filter((product) => {
+          if (!searchTerm) return true;
+          const name = String(product.name || '').toLowerCase().replace(/\s+/g, '');
+          const sku = String(product.sku || '').toLowerCase().replace(/\s+/g, '');
+          return name.includes(searchTerm) || sku.includes(searchTerm);
+        });
         for (const p of items) {
           const img = safeImage(p.image);
           if (!img) continue;
@@ -832,7 +857,7 @@
           card.addEventListener('click',()=>chooseCatalogProduct(p));
           catalogGrid.appendChild(card);
         }
-        hasNextPage = !!payload.hasNext;
+        hasNextPage = false;
         catalogMessage.textContent = catalogGrid.children.length ? 'اضغطي على العباية لعرض صورها وتجربتها.' : 'لم نجد عبايات مطابقة للبحث.';
         catalogMore.classList.toggle('hidden',!hasNextPage);
         catalogPage++;
@@ -840,15 +865,19 @@
         catalogMessage.textContent = err.message + ' — تأكدي من ربط متجر سلة في إعدادات Vercel.';
       } finally { catalogLoading=false; }
     }
-    async function chooseCatalogProduct(p) {
-      catalogMessage.textContent='جاري تحميل صور العباية...';
-      try {
-        const response=await fetch('/api/products?id='+encodeURIComponent(p.id));
-        const data=await response.json();
-        if (!response.ok) throw new Error(data.error || 'تعذر تحميل الصور');
-        if (!data.product?.images?.length) throw new Error('لا توجد صور لهذا المنتج');
-        selectProduct(data.product);
-      } catch(err) { catalogMessage.textContent=err.message; }
+    function chooseCatalogProduct(p) {
+      const images = Array.isArray(p.images) ? [...p.images] : [];
+      if (!images.length && p.image) images.push(p.image);
+      if (!images.length) {
+        catalogMessage.textContent = 'لا توجد صور متاحة لهذه العباية';
+        return;
+      }
+      selectProduct({
+        id: p.id,
+        name: p.name || 'عباية لافين',
+        url: p.product_url || p.url || '',
+        images
+      });
     }
     catalogSearch.addEventListener('input',()=>{
       clearTimeout(searchTimer);
