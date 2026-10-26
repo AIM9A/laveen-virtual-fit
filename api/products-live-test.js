@@ -66,6 +66,7 @@ function productImages(product) {
   }
 
   add(product.thumbnail);
+add(product.main_image);
 
   if (typeof product.image === 'string') {
     add(product.image);
