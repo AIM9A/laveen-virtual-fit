@@ -153,11 +153,24 @@ export default async function handler(req, res) {
       throw new Error('Invalid Salla products response');
     }
 
-    const products = json.data
-      .filter((p) => p.type === 'product')
-      .filter((p) => p.status === 'sale')
-      .map(cleanProduct)
-      .filter((p) => p.images.length > 0);
+    const regularProducts = json.data
+  .filter((p) => p.type === 'product');
+
+const saleProducts = regularProducts
+  .filter((p) => p.status === 'sale');
+
+const cleanedProducts = saleProducts
+  .map(cleanProduct);
+
+const products = cleanedProducts
+  .filter((p) => p.images.length > 0);
+
+const diagnostics = {
+  received: json.data.length,
+  regular_products: regularProducts.length,
+  sale_products: saleProducts.length,
+  products_with_images: products.length
+};
 
     return res.status(200).json({
       success: true,
